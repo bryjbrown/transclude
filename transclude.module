@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * The transclude module.
+ */
+
+/**
+ * Implements hook_token_info(). This hook will register tow token lname and fname.
+ */
+function transclude_token_info() {
+  $info['types']['transclusion'] = array(
+    'name' => t('Transclusion'),
+    'description' => t('Tokens related to transcluding content.'),
+    'needs-data' => 'transclusion',
+  );
+  $info['tokens']['transclusion']['transclude-external'] = array(
+    'name' => t('External transclusion'),
+    'description' => t('Content to be transcluded from an external source.'),
+  );
+  $info['tokens']['transclusion']['transclude-internal'] = array(
+    'name' => t('Internal transclusion'),
+    'description' => t('Content to be transcluded from an internal source.'),
+  );
+  return $info;
+}
+
