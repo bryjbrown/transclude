@@ -5,23 +5,53 @@
  * The transclude module.
  */
 
-/**
- * Implements hook_token_info(). This hook will register tow token lname and fname.
- */
 function transclude_token_info() {
-  $info['types']['transclusion'] = array(
-    'name' => t('Transclusion'),
-    'description' => t('Tokens related to transcluding content.'),
-    'needs-data' => 'transclusion',
+  $type = array(
+    'name' => t('Transclude'), 
+    'description' => t('Transclude content.'), 
   );
-  $info['tokens']['transclusion']['transclude-external'] = array(
-    'name' => t('External transclusion'),
-    'description' => t('Content to be transcluded from an external source.'),
+
+  return array(
+    'types' => array('transclude' => $type), 
   );
-  $info['tokens']['transclusion']['transclude-internal'] = array(
-    'name' => t('Internal transclusion'),
-    'description' => t('Content to be transcluded from an internal source.'),
-  );
-  return $info;
 }
 
+function transclude_tokens($type, $tokens, array $data = array(), array $options = array()) {
+
+  $replacements = array();
+  $sanitize = !empty($options['sanitize']);
+  if ($type == 'transclude') {
+    foreach ($tokens as $name => $original) {
+      $replacements[$original] = get_transcluded_content($name);
+    }
+  }
+
+  return $replacements;
+}
+
+function get_transcluded_content($url) {
+
+  if (!strpos($url, '#')) {
+    drupal_set_message(t('Error: Transclusion token contains no anchor.'), 'error');
+    return '';
+  }
+
+  if (preg_match('/<\/a>/', $url)) {
+    @$dom = new DomDocument();
+    $dom->loadHTML($url);
+    $url = $dom->getElementsByTagName('a')->item(0)->nodeValue;
+  }
+
+  list($base, $anchor) = explode('#', $url);
+  $external_html = file_get_contents($base);
+  $dom = new DomDocument();
+  @$dom->loadHTML(file_get_contents($base));
+  $anchor_node = $dom->getElementById($anchor);
+
+  if ($anchor_node === NULL) {
+    drupal_set_message(t('Error: Anchor could not be found in external page.'), 'error');
+    return '';
+  }
+  
+  return "<blockquote class='transclusion'>{$dom->saveHTML($anchor_node)}</blockquote>";
+}
