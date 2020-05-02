@@ -2,5 +2,5 @@ name = Transclude Token
 description = "Transclude external content into Drupal via tokens"
 dependencies[] = token
 dependencies[] = token_filter
-version = 7.x-dev
+version = 7.x-1.x-dev
 core = 7.x
