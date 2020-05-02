@@ -2,10 +2,10 @@
 
 /**
  * @file
- * The transclude module.
+ * The transclude_token module.
  */
 
-function transclude_token_info() {
+function transclude_token_token_info() {
   $type = array(
     'name' => t('Transclude'), 
     'description' => t('Transclude content.'), 
@@ -16,7 +16,7 @@ function transclude_token_info() {
   );
 }
 
-function transclude_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function transclude_token_tokens($type, $tokens, array $data = array(), array $options = array()) {
 
   $replacements = array();
   $sanitize = !empty($options['sanitize']);

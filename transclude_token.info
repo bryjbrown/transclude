@@ -1,4 +1,4 @@
-name = Transclude
+name = Transclude Token
 description = "Transclude external content into Drupal via tokens"
 dependencies[] = token
 dependencies[] = token_filter
